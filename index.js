@@ -1,5 +1,5 @@
-const userRoutes = require("./routes/user.routes");
 const express = require('express');
+const userRoutes = require("./routes/login/user.routes");
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv').config();
@@ -7,12 +7,9 @@ const routes = require('./routes/signup/signup.routes')
 
 const session = require('express-session');;
 const authRoutes = require('./routes/signup/auth.routes');
-const authRoutes = require('./routes/authRoutes');
-const otpRoutes = require('./routes/otpRoutes');
-const errorHandler = require('./middlewares/errorHandler');
-const routes = require('./routes/signup/signup.routes');
-const session = require('express-session');
-const authRouter = require('./routes/auth.routes');
+const otpRoutes = require('./routes/signup/otpRoutes');
+const errorHandler = require('./Middleware/signup/errorHandler');
+const authRouter = require('./routes/signup/auth.routes');
 
 const app = express();
 
@@ -28,7 +25,6 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-// Register routes (make sure there are no conflicting paths)
 app.use("/api/auth", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/auth", authRouter);

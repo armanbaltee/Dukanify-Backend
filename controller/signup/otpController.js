@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../../model/SignUpModel');
 
 exports.verifyOTP = async (req, res, next) => {
   try {

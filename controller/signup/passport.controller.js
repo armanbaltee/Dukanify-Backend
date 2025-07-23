@@ -3,7 +3,11 @@ const User = require('../../model/SignUpModel');
 
 
 exports.googleLogin = async (req, res) => {
-  const { token } = req.body;
+  const { token, action } = req.body;
+
+  if (!['signin', 'signup'].includes(action)) {
+    return res.status(400).json({ success: false, message: 'Invalid action' });
+  }
 
   try {
     const ticket = await client.verifyIdToken({
@@ -12,48 +16,51 @@ exports.googleLogin = async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-    const { sub, name, email, picture } = payload;
+    const { sub: googleId, name, email, picture } = payload;
 
-    let user = await User.findOne({ googleId: sub });
+    let user = await User.findOne({ googleId });
 
-    if (!user) {
+    if (action === 'signup') {
+      if (user) {
+        return res.status(400).json({ success: false, message: 'User already exists. Please sign in.' });
+      }
+
       user = await User.create({
-        googleId: sub,
+        googleId,
         name,
         email,
         photo: picture
       });
+
+      req.session.user = user;
+
+      return res.status(201).json({
+        success: true,
+        user: {
+          name: user.name,
+          email: user.email
+        }
+      });
     }
 
-    req.session.user = user;
-
-    res.status(200).json({
-      success: true,
-      user: {
-        name: user.name,
-        email: user.email,
-        // photo: user.photo
+    if (action === 'signin') {
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found. Please sign up.' });
       }
-    });
+
+      req.session.user = user;
+
+      return res.status(200).json({
+        success: true,
+        user: {
+          name: user.name,
+          email: user.email
+        }
+      });
+    }
 
   } catch (error) {
     console.error('Google token verification failed:', error.message);
-    res.status(401).json({ success: false, message: 'Invalid token' });
+    res.status(401).json({ success: false, message: 'Invalid Google token' });
   }
-};
-
-exports.getCurrentUser = (req, res) => {
-  if (req.session && req.session.user) {
-    res.status(200).json({ success: true, user: req.session.user });
-  } else {
-    res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
-};
-
-exports.logout = (req, res) => {
-  req.session.destroy(err => {
-    if (err) return res.status(500).send('Failed to logout');
-    res.clearCookie('connect.sid');
-    res.status(200).json({ success: true, message: 'Logged out' });
-  });
 };

@@ -1,5 +1,5 @@
 const User = require("../../model/SignUpModel");
-const { generateOTP, sendOTP } = require("../../service/signup/otpgenrateservice");
+const { generateOTP, sendOTP } = require("../../services/signup/otpgenrateservice");
 
 const signup = async (req, res) => {
   try {
