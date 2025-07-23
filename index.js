@@ -4,12 +4,9 @@ const cors = require('cors')
 const dotenv = require('dotenv').config();
 const routes = require('./routes/signup/signup.routes')
 
-const session = require('express-session');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const authRoutes = require('./routes/auth.routes');
+const session = require('express-session');;
+const authRoutes = require('./routes/signup/auth.routes');
 
-dotenv.config();
 const app = express();
 
 app.use(cors({
