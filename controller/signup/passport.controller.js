@@ -1,5 +1,5 @@
-const client = require('../config/passport');
-const User = require('../model/SignUpModel');
+const client = require('../../config/passport');
+const User = require('../../model/SignUpModel');
 
 
 exports.googleLogin = async (req, res) => {
