@@ -1,5 +1,6 @@
 const client = require('../config/passport');
-const User = require('../model/user.model');
+const User = require('../model/SignUpModel');
+
 
 exports.googleLogin = async (req, res) => {
   const { token } = req.body;
