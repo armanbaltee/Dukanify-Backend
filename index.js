@@ -3,6 +3,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv').config();
+const routes = require('./routes/signup/signup.routes')
+
+const session = require('express-session');;
+const authRoutes = require('./routes/signup/auth.routes');
 const authRoutes = require('./routes/authRoutes');
 const otpRoutes = require('./routes/otpRoutes');
 const errorHandler = require('./middlewares/errorHandler');
