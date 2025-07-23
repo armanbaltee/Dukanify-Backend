@@ -2,7 +2,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
-  // Common fields
   name: {
     type: String
   },
@@ -14,14 +13,12 @@ const userSchema = new mongoose.Schema({
     lowercase: true
   },
 
-  // For Google Login
   googleId: {
     type: String,
     unique: true,
-    sparse: true  // Allows multiple nulls
+    sparse: true  
   },
 
-  // For Email/Password Login
   password: {
     type: String
   },
@@ -36,7 +33,7 @@ const userSchema = new mongoose.Schema({
     default: false
   },
 
-  // Optional photo field (for Google or profile image)
+
   photo: {
     type: String
   },
