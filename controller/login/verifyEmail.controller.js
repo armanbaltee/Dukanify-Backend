@@ -1,8 +1,11 @@
-const User = require('../models/User');
+const User = require('../../model/SignUpModel');
 
 exports.verifyOTP = async (req, res, next) => {
   try {
     const { userId, otp } = req.body;
+
+    console.log('verify OTP=====', req.body)
+
     const user = await User.findById(userId);
 
     if (!user) {
@@ -27,13 +30,16 @@ exports.verifyOTP = async (req, res, next) => {
 exports.resendOTP = async (req, res, next) => {
   try {
     const { userId } = req.body;
+
+    console.log('resend OTP====', userId)
+
     const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const otp = generateOTP();
+    const otp = generateLoginOTP();
     user.otp = otp;
     user.otpExpires = new Date(Date.now() + 15 * 60 * 1000);
     await user.save();
@@ -45,3 +51,8 @@ exports.resendOTP = async (req, res, next) => {
   }
 };
 
+
+
+const generateLoginOTP = () => {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+};
